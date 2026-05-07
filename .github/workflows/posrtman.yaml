@@ -27,7 +27,7 @@ jobs:
 
       - name: Run collection
         run: |
-          postman collection run "./postman/products-and-orders.yaml"
+          postman collection run "./postman/collections/Products API"
 
   # -------------------------------------------------------
   # Push workspace to Postman cloud on merge to main
