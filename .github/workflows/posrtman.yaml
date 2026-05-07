@@ -1,0 +1,52 @@
+name: Postman
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  # -------------------------------------------------------
+  # Run the Postman collection on every PR open / update
+  # -------------------------------------------------------
+  collection-run:
+    name: Run collection
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Postman CLI
+        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Authenticate Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      - name: Run collection
+        run: |
+          postman collection run "./postman/products-and-orders.yaml"
+
+  # -------------------------------------------------------
+  # Push workspace to Postman cloud on merge to main
+  # -------------------------------------------------------
+  workspace-push:
+    name: Push to Postman workspace
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Postman CLI
+        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Authenticate Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      - name: Push updates to the cloud workspace
+        run: |
+          postman workspace push --yes

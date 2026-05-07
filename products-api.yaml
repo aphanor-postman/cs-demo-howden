@@ -1,0 +1,546 @@
+openapi: 3.0.0
+info:
+  version: 1.0.2
+  title: Products & Orders API
+servers:
+  - url: 'https://tyobce1cv8.execute-api.ap-southeast-2.amazonaws.com/latest'
+    description: AWS Test Server
+  - url: 'http://localhost:3000'
+    description: Local Development Server
+paths:
+  /api/products:
+    put:
+      summary: Returns a list of products from the database
+      operationId: getProducts
+      tags:
+        - Products
+      responses:
+        '200':
+          description: A list of current products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsList.yaml'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new product in the database
+      operationId: createProduct
+      tags:
+        - Products
+      requestBody:
+        description: Product information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProduct'
+      responses:
+        '201':
+          description: Product was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The URL of the new product that was just created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewProduct.yaml'
+          x-postman-variables:
+            - type: save
+              name: productId
+              path: .id
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/api/products/{productId}':
+    parameters:
+      - in: path
+        name: productId
+        schema:
+          type: string
+        required: true
+        description: product Id to be retrieved
+        x-postman-variables:
+          - type: load
+            name: productId
+    get:
+      summary: Get a product from the database
+      operationId: getProductById
+      tags:
+        - Products
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewProduct.yaml'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Create a new product in the database
+      operationId: updateProductById
+      tags:
+        - Products
+      requestBody:
+        description: Product information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProduct'
+      responses:
+        '200':
+          description: Product was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The URL of the new product that was just updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewProduct.yaml'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a product from the database
+      operationId: deleteProduct
+      tags:
+        - Products
+      responses:
+        '204':
+          description: Product deleted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/orders:
+    get:
+      summary: Returns a list of orders from the database
+      operationId: getOrders
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: A list of current orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new order in the database
+      operationId: createOrder
+      tags:
+        - Orders
+      requestBody:
+        description: Order information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOrder'
+      responses:
+        '201':
+          description: Order was created successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The URL of the new order that was just created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewOrder'
+          x-postman-variables:
+            - type: save
+              name: orderId
+              path: .id
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/api/orders/{orderId}':
+    parameters:
+      - in: path
+        name: orderId
+        schema:
+          type: string
+        required: true
+        description: Order Id to be retrieved
+        x-postman-variables:
+          - type: load
+            name: orderId
+    get:
+      summary: Get an order from the database
+      operationId: getOrderById
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Order retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Create a new order in the database
+      operationId: updateOrderById
+      tags:
+        - Orders
+      requestBody:
+        description: Order information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewOrder'
+      responses:
+        '200':
+          description: Order was updated successfully
+          headers:
+            Location:
+              schema:
+                type: string
+              description: The URL of the new order that was just updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewOrder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete an order from the database
+      operationId: deleteOrder
+      tags:
+        - Orders
+      responses:
+        '204':
+          description: Order deleted successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    NewProduct:
+      type: object
+      required:
+        - name
+        - description
+        - model
+        - sku
+        - cost
+        - imageUrl
+      properties:
+        name:
+          type: string
+          description: The name of the Product
+          example: Bose Noise Cancelling Over-Ear Headphones 700 (Black)
+        description:
+          type: string
+          description: The description of the Product
+          example: |
+            - 11 levels of noise cancelling
+            - Google Assistant and Amazon Alexa built in
+            - 20 hours of battery life
+        model:
+          type: string
+          description: The model number of the Product
+          example: 794297-0100
+        sku:
+          type: string
+          description: The SKU of the Product
+          example: '394807'
+        cost:
+          description: The cost of the Product
+          type: number
+          format: float
+          example: 445
+        imageUrl:
+          description: The image URL of the Product
+          type: string
+          format: url
+          example: >-
+            https://cdn.shopify.com/s/files/1/0024/9803/5810/products/394807-Product-0-I_d1664990-4dfb-462f-bb93-2fb469ed7d5d_800x800.jpg
+    OrdersList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ViewOrder'
+    ViewOrder:
+      type: object
+      required:
+        - id
+        - status
+        - date
+        - productIds
+        - cost
+        - tax
+        - taxRate
+        - total
+      properties:
+        id:
+          type: string
+          description: The ID of the Order
+          format: guid
+          example: a1805cde-f34f-4945-9fec-3e096fef4bdd
+        status:
+          type: string
+          description: The status of the Order
+          enum:
+            - OPEN
+            - PAID
+            - SHIPPED
+            - RECEIVED
+          example: OPEN
+        date:
+          type: string
+          description: The date of the Order
+          format: date-time
+          example: '2022-03-12T23:20:50.52Z'
+        productIds:
+          type: array
+          items:
+            type: string
+            description: The ID of the Product
+            example: a1805cde-f34f-4945-9fec-3e096fef4bdd
+        cost:
+          type: number
+          description: The cost of the Order less tax
+          format: float
+          example: 948.32
+        tax:
+          type: number
+          description: The sales tax of the Order
+          format: float
+          example: 94.83
+        taxRate:
+          type: number
+          description: The rate at which the sales tax is calculated on the Order
+          format: float
+          example: 10
+        total:
+          type: number
+          description: The cost plus the sales tax of the Order
+          format: float
+          example: 1043.152
+    NewOrder:
+      type: object
+      required:
+        - status
+        - date
+        - productIds
+        - cost
+        - tax
+        - taxRate
+        - total
+      properties:
+        status:
+          type: string
+          description: The latest status of the Order
+          enum:
+            - OPEN
+            - PAID
+            - SHIPPED
+            - RECEIVED
+          example: OPEN
+        date:
+          type: string
+          description: The date of the Order
+          format: date-time
+          example: '2022-03-12T23:20:50.52Z'
+        productIds:
+          type: array
+          items:
+            type: string
+            description: The product IDs of the Order
+            example: a1805cde-f34f-4945-9fec-3e096fef4bdd
+        cost:
+          type: number
+          description: The cost of the Order
+          format: float
+          example: 948.32
+        tax:
+          type: number
+          description: The sales tax of the Order
+          format: float
+          example: 94.83
+        taxRate:
+          type: number
+          description: The percentage at which the sales tax is calculated.
+          format: float
+          example: 10
+        total:
+          type: number
+          description: The cost plus the sales tax of the Order
+          format: float
+          example: 1043.152
+    Error:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: The status code of the error
+          example: OK
+        message:
+          type: string
+          description: The message detailing what happened.
+          example: The service did not work as expected.
+    ProductsList.yaml:
+      type: array
+      items:
+        $ref: '#/components/schemas/ViewProduct.yaml'
+    ViewProduct.yaml:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - model
+        - sku
+        - cost
+        - imageUrl
+      properties:
+        id:
+          type: string
+          format: guid
+          description: The ID of the Product
+          example: a1805cde-f34f-4945-9fec-3e096fef4bdd
+        name:
+          type: string
+          description: The name of the Product
+          example: Bose Noise Cancelling Over-Ear Headphones 700 (Black)
+        description:
+          type: string
+          description: The description of the Product
+          example: |
+            - 11 levels of noise cancelling
+            - Google Assistant and Amazon Alexa built in
+            - 20 hours of battery life
+        model:
+          type: string
+          description: The model number of the Product
+          example: 794297-0100
+        sku:
+          type: string
+          description: The SKU of the Product
+          example: '394807'
+        cost:
+          description: The cost of the Product
+          type: number
+          format: float
+          example: 445
+        imageUrl:
+          type: string
+          description: The URL to the image of the Product
+          format: url
+          example: >-
+            https://cdn.shopify.com/s/files/1/0024/9803/5810/products/394807-Product-0-I_d1664990-4dfb-462f-bb93-2fb469ed7d5d_800x800.jpg
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      name: apikey
+      in: header
+security:
+  - apiKeyAuth: []

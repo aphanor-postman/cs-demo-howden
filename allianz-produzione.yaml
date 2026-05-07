@@ -1,0 +1,82 @@
+openapi: 3.0.1
+info:
+  title: Allianz (Produzione)
+  description: Azure Logic App.
+  version: v1
+servers:
+  - url: https://am-p-assiteca-edi-ne01.azure-api.net/allianz/v1
+paths:
+  /manual/paths/invoke:
+    post:
+      summary: polizze
+      description: Trigger a run of the logic app.
+      operationId: manual-invoke
+      parameters:
+        - name: as2-From
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: as2-To
+          in: header
+          required: true
+          schema:
+            enum:
+              - Assiteca
+            type: string
+            default: Assiteca
+        - name: Message-Id
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: Message-Type
+          in: header
+          required: true
+          schema:
+            enum:
+              - XML
+            type: string
+            default: XML
+      requestBody:
+        description: The request body.
+        content:
+          application/json: { }
+      responses:
+        '200':
+          description: The Logic App Response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/200 Response'
+        '400':
+          description: The Logic App Response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400 Response'
+        '401':
+          description: The Logic App Response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401 Response'
+        '500':
+          description: The Logic App Response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500 Response'
+components:
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]
